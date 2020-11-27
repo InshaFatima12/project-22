@@ -1,76 +1,41 @@
-var helicopterIMG, helicopterSprite, packageSprite,packageIMG;
-var packageBody,ground
-const Engine = Matter.Engine;
-const World = Matter.World;
-const Bodies = Matter.Bodies;
-const Body = Matter.Body;
+var bullet,wall;
+var thickness,speed,weight;
 
-function preload()
-{
-	helicopterIMG=loadImage("helicopter.png")
-	packageIMG=loadImage("package.png")
-}
 
 function setup() {
-	createCanvas(800, 700);
-	rectMode(CENTER);
-	
+  createCanvas(1600,400);
 
-	packageSprite=createSprite(width/2, 80, 10,10);
-	packageSprite.addImage(packageIMG)
-	packageSprite.scale=0.2
-   
-   
-   
-   
-   
-	helicopterSprite=createSprite(width/2, 200, 10,10);
-	helicopterSprite.addImage(helicopterIMG)
-	helicopterSprite.scale=0.6
+ speed= random(55,90);
+ weight= random(400,1500);
+ thickness= random(22,83)
 
-	groundSprite=createSprite(width/2, height-35, width,10);
-	groundSprite.shapeColor=color(255)
+ bullet= createSprite(50, 200, 40, 10);
+ bullet.velocityX= speed;
+ bullet.shapeColor=color(255)
 
-
-	engine = Engine.create();
-	world = engine.world;
-
-	packageBody = Bodies.circle(width/2 , 200 , 5 , {restitution:3, isStatic:true});
-	World.add(world, packageBody);
-	
-
-	//Create a Ground
-	ground = Bodies.rectangle(width/2, 650, width, 10 , {isStatic:true} );
- 	World.add(world, ground);
-
-
-	Engine.run(engine);
-	 
-    Matter.Body.isStatic= false
+ wall= createSprite(1200,200,thickness, height/2);
+ wall.shapeColor=color(80,80,80)
 }
-
 
 function draw() {
-  rectMode(CENTER);
-  background(0);
-  //packageSprite.x= packageBody.position.x 
-  //packageSprite.y= packageBody.position.y 
-
-  drawSprites();
- 
-}
-
-function keyPressed() {
- if (keyCode === DOWN_ARROW) {
-	packageSprite.x= packageBody.position.x 
-	packageSprite.y= packageBody.position.y 
-	packageSprite.velocityY= 3.8
-	
-    // Look at the hints in the document and understand how to make the package body fall only on press of the Down arrow key.
-
-    
+  background(0);  
+ if(wall.x-bullet.x < (bullet.width+wall.width)/2)
+{
+  bullet.velocityX=0;
+  var deformation= 0.5 * weight * speed* speed/22509;
+  if (deformation>180)
+  {
+    wall.shapeColor=color(255,0,0);
+  }
+  if(deformation<180 && deformation>100)
+  {
+    wall.shapeColor=color(230,230,0);
+  }
+  if(deformation<100)
+  {
+    wall.shapeColor=color(0,255,0);
   }
 }
 
-
-
+  drawSprites();
+}
